@@ -1,0 +1,21 @@
+#canvas1{
+	background-image: url("../resources/forest1.jpg");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
+#container{
+	position: relative;
+}
+#container #canvas1, #overlay{
+	position: absolute;
+}
+#container #overlay, #text{
+	position: absolute;
+}
+
+#text {
+	padding: 5% 5% 5% 5%;
+	color: white;
+	font-family: futura;
+}

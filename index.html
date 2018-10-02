@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Final Project</title>
+    <link rel='stylesheet' href='css/style.css' />
+
+  </head>
+  <body bgcolor=white>
+    <script src=js/utility.js></script>
+    <script src=js/CT_Modeler.js></script>
+    <script src=js/drawlib1.js></script>
+    
+      <!--<h3>Caterpie</h3>
+      <p>Press "W" to make Caterpie walk</p>
+      <p>Press "L" to make Caterpie look around</p>
+      <p>Press "U" to make Caterpie fall upside down</p>-->
+
+      <!--<button onclick="document.A.action(0)">Click me</button>-->
+      <div id="container">
+        <canvas id='canvas1' width='1280' height='700'></canvas>
+        <img id="overlay" src="resources/grass.png" width="1280" height="700">
+        <div id="text">
+          <h3>Controls</h3>
+          <p>I : in love</p>
+          <p>L : look around</p>
+          <p>R : rotate</p>
+          <p>S : sad</p>
+          <p>U : upsidedown</p>
+        </div>
+      </div>
+    
+  </body>
+
+<script>
+/**var canvas = document.getElementById("canvas1"),
+  ctx = canvas.getContext("2d");
+var background = new Image();
+background.src = "resources/forest.png";
+background.onload = function(){
+  ctx.drawImage(background,0,0);
+}**/
+
+document.addEventListener("keydown", keyDownTextField, false);
+
+var walk = false;
+var look = false;
+var upsideDown = false; 
+var rollUp = false;
+var inLove = false;
+var sad = false;
+var happy = false;
+var yes = false;
+var no = false;
+var rotate = false;
+
+function keyDownTextField(e) {
+  var keyCode = e.keyCode;
+  if(keyCode== 87) {
+  	if (walk == false){
+    	walk = true;
+  	}else{
+  		walk = false;
+  	}
+  }
+  if (keyCode==76) {
+  	if (look == false){
+  		look = true;
+  	}else{
+  		look = false;
+  	}
+  }
+  if (keyCode==85) {
+    if (upsideDown == false){
+      upsideDown = true;
+    }else{
+      upsideDown = false;
+    }
+  }
+  if (keyCode==73) {
+    if (inLove == false){
+      inLove = true;
+    }else{
+      inLove = false;
+    }
+  }
+  if (keyCode==82) {
+    if (rotate == false){
+      rotate = true;
+    }else{
+      rotate = false;
+    }
+  }
+  if (keyCode==83) {
+    if (sad == false){
+      sad = true;
+    }else{
+      sad = false;
+    }
+  }
+ }
+
+function getTime() { return (new Date()).getTime() / 1000; }
+
+ var scene = new CT.Scene(canvas1);
+ scene.setLight(0, [ 1, 1, 1]);
+ scene.setLight(1, [-1,-1,-1], [.1, .05, 0]);
+
+ var root = new CT.Node();
+ scene.add(root);
+
+ var body = root.addChild(new CT.Sphere());
+ body.scale([.55,.55,.55]);
+ body.setColor([0,1.6,0]);
+
+ var spot = body.addChild(new CT.Torus(32,3,.3));
+ spot.translate(0,0,.9).scale([.3,.3,.3]);
+ spot.setColor([2,2,0]);
+
+ var spot2 = body.addChild(new CT.Torus(32,3,.3));
+ spot2.translate(0,0,-.9).scale([.3,.3,.3]);
+ spot2.setColor([2,2,0]); 
+
+ var joint_bf = body.addChild(new CT.Node());
+
+ var foot = joint_bf.addChild(new CT.Sphere());
+ foot.translate(.2,-.9,-.5).scale([.3,.3,.3]);
+ foot.setColor([2,2,0]);
+
+ var joint_bf2 = body.addChild(new CT.Node());
+
+ var foot2 = joint_bf2.addChild(new CT.Sphere());
+ foot2.translate(.2,-.9,.5).scale([.3,.3,.3]);
+ foot2.setColor([2,2,0]);
+
+
+ var joint_bh = body.addChild(new CT.Node());
+
+ var head = joint_bh.addChild(new CT.Sphere());
+ head.translate(1,1.4,0).scale([1.3,1.3,1.3]);
+
+ var eye = head.addChild(new CT.Sphere());
+ eye.translate(0,0,.9).scale([.55,.55,.1]);
+ eye.setColor([2,2,0]);
+
+ var pupil = eye.addChild(new CT.Sphere());
+ pupil.translate(0,0,.9).scale([.8,.8,.3]);
+ pupil.setColor([0,0,0]);
+
+ var shine = pupil.addChild(new CT.Sphere());
+ shine.translate(.3,.4,.9).scale([.3,.3,.3]);
+ shine.setColor([2,2,2]);
+
+ var eye2 = head.addChild(new CT.Sphere());
+ eye2.translate(0,0,-.9).scale([.55,.55,.1]);
+ eye2.setColor([2,2,0]);
+
+ var pupil2 = eye2.addChild(new CT.Sphere());
+ pupil2.translate(0,0,-.9).scale([.8,.8,.3]);
+ pupil2.setColor([0,0,0]);
+
+ var shine2 = pupil2.addChild(new CT.Sphere());
+ shine2.translate(.3,.4,-.9).scale([.3,.3,.3]);
+ shine2.setColor([2,2,2]);
+
+ var joint_ha = head.addChild(new CT.Node());
+ var antenna = joint_ha.addChild(new CT.Cube());
+ antenna.translate(.65,.7,0).rotateZ(-.3).scale([.19,.35,.15]);
+ antenna.setColor(2,.1,0);
+
+ //var joint_aa = antenna.addChild(new CT.Node());
+ var antenna2 = joint_ha.addChild(new CT.Cube());
+ antenna2.translate(.65,1.1,.3).rotateY(-.5).rotateZ(-.3).rotateX(1).scale([.15,.4,.15]);
+ antenna2.setColor([2,.1,0]);
+
+ var antenna3 = joint_ha.addChild(new CT.Cube());
+ antenna3.translate(.65,1.1,-.3).rotateY(.5).rotateZ(-.3).rotateX(-1).scale([.15,.4,.15]);
+ antenna3.setColor([2,.1,0]);
+
+ var joint_hn = head.addChild(new CT.Node());
+
+ var nose = joint_hn.addChild(new CT.Cylinder());
+ nose.translate(.4,-.5,0).rotateZ(-.8).rotateY(1.5).scale([.5,.5,.5]);
+
+ var joint_bb = body.addChild(new CT.Node());
+
+ var body2 = joint_bb.addChild(new CT.Sphere());
+ body2.translate(-1,-.3,0).scale(.9,.9,.9);
+
+ var spot_2 = body2.addChild(new CT.Torus(32,3,.3));
+ spot_2.translate(0,0,.9).scale([.3,.3,.3]);
+ spot_2.setColor([2,2,0]);
+
+ var spot_22 = body2.addChild(new CT.Torus(32,3,.3));
+ spot_22.translate(0,0,-.9).scale([.3,.3,.3]);
+ spot_22.setColor([2,2,0]);
+
+ var joint_bf_2 = body2.addChild(new CT.Node());
+
+ var foot_2 = joint_bf_2.addChild(new CT.Sphere());
+ foot_2.translate(.2,-.9,-.5).scale([.3,.3,.3]);
+ foot_2.setColor([2,2,0]);
+
+ var joint_bf_22 = body2.addChild(new CT.Node());
+
+ var foot_22 = joint_bf_22.addChild(new CT.Sphere());
+ foot_22.translate(.2,-.9,.5).scale([.3,.3,.3]);
+ foot_22.setColor([2,2,0]);
+
+ var joint_bb2 = body2.addChild(new CT.Node());
+
+ var body3 = joint_bb2.addChild(new CT.Sphere());
+ body3.translate(-1,-.28,0).scale(.8,.8,.8);
+
+ var spot_3 = body3.addChild(new CT.Torus(32,3,.3));
+ spot_3.translate(0,0,.9).scale([.3,.3,.3]);
+ spot_3.setColor([2,2,0]);
+
+ var spot_32 = body3.addChild(new CT.Torus(32,3,.3));
+ spot_32.translate(0,0,-.9).scale([.3,.3,.3]);
+ spot_32.setColor([2,2,0]);
+
+ var joint_bb3 = body3.addChild(new CT.Node());
+
+ var body4 = joint_bb3.addChild(new CT.Sphere());
+ body4.translate(-.8,-.1,0).scale(.9,.9,.9);
+
+ var spot_4 = body4.addChild(new CT.Torus(32,3,.3));
+ spot_4.translate(0,0,.9).scale([.3,.3,.3]);
+ spot_4.setColor([2,2,0]);
+
+ var spot_42 = body4.addChild(new CT.Torus(32,3,.3));
+ spot_42.translate(0,0,-.9).scale([.3,.3,.3]);
+ spot_42.setColor([2,2,0]);
+
+ var joint_bb4 = body4.addChild(new CT.Node());
+
+ var body5 = joint_bb4.addChild(new CT.Sphere());
+ body5.translate(-.8,-.1,0).scale(.9,.9,.9);
+
+ var spot_5 = body5.addChild(new CT.Torus(32,3,.3));
+ spot_5.translate(0,0,.9).scale([.3,.3,.3]);
+ spot_5.setColor([2,2,0]);
+
+ var spot_52 = body5.addChild(new CT.Torus(32,3,.3));
+ spot_52.translate(0,0,-.9).scale([.3,.3,.3]);
+ spot_52.setColor([2,2,0]);
+
+ var joint_bt = body5.addChild(new CT.Node());
+
+ var tail = joint_bt.addChild(new CT.Sphere());
+ tail.translate(-1.2,1.5,0).rotateZ(.5).scale(.4,1.3,.4);
+ tail.setColor([2,2,0]);
+
+ /*
+   Usage:
+      The shoulder is assumed to be at the origin [0,0,0].
+      a is the length of the forearm.
+      b is the length of the lower arm.
+      C is the [x,y,z] location of the wrist.
+      D starts out as an [x,y,z] "hint location" for the elbow,
+        and is overwritten by the exact location of the elbow.
+*/
+function ik(a, b, C, D) {
+   var cc = dot(C,C), x = (1 + (a*a - b*b)/cc) / 2, y = dot(C,D)/cc;
+   for (var i = 0 ; i < 3 ; i++) D[i] -= y * C[i];
+   y = Math.sqrt(Math.max(0,a*a - cc*x*x) / dot(D,D));
+   for (var i = 0 ; i < 3 ; i++) D[i] = x * C[i] + y * D[i];
+}
+
+//Couldn't really find out how to use the ik function on my caterpie since it has
+//no arms or elbows
+
+
+ var startTime = getTime();
+   (function update() {
+   		CT.time = getTime() - startTime;
+
+   		//root.identity().rotateY(.5).rotateY((CT.time)).translate(.4,0,0);
+      root.identity().translate(0,-.2,0).scale(.2);
+
+      if (look == false){
+        reset();
+      }
+      if (upsideDown == false){
+        reset();
+      }
+      if (inLove == false){
+        reset();
+      }
+
+      //rotation
+      if (rotate == true){
+        root.rotateY(.5 * -(CT.time));
+      }
+      if (rotate == false){
+        root.rotateY(0);
+      }
+
+      if (walk == true){
+ 			  //root.translate(.4,0,0).rotateY(-(CT.time));
+
+   			joint_bh.identity().translate(.2 * Math.sin(CT.time * 5),0,0);//.rotateY(-.05).rotateZ(Math.sin(CT.time)*.5);
+        
+   			joint_bb.identity().translate(.1 * Math.sin(CT.time * 5),0,0);
+        joint_bb2.identity().translate(.2 * Math.sin(CT.time * 5),-.1 * Math.cos(CT.time * 5),0);
+        joint_bb3.identity().translate(.2 * Math.sin(CT.time * 5),0,0);
+        joint_bb4.identity().translate(.2 * Math.sin(CT.time * 5),0,0);
+        
+   			joint_bf.identity().rotateZ(.2 * Math.sin((CT.time + 2)* 5));
+   			joint_bf2.identity().rotateZ(.2 * Math.sin((CT.time + 2)* 5));
+
+        joint_bf_2.identity().rotateZ(.2 * Math.sin((CT.time - 5) * 5));
+        joint_bf_22.identity().rotateZ(.2 * Math.sin((CT.time - 5) * 5));
+   		}
+
+   		if (look == true){
+        upsideDown = false;
+        inLove = false;
+   			joint_bh.identity().rotateY(Math.sin(CT.time)).rotateZ(.5 + Math.sin(CT.time)*.5);
+   			root.rotateY(-.5).translate(0,.5,0);
+   			joint_bf.identity().translate(.7,.5,0);
+   			joint_bf2.identity().translate(.7,.5,0);
+   			joint_bb.identity().translate(.6,-.5,0);
+        joint_bf_2.identity().translate(.7,.5,0);
+        joint_bf_22.identity().translate(.7,.5,0);
+   			joint_bb2.identity().translate(.5,-.5,0);
+   			joint_bb4.identity().translate(.3,.5,0);
+        joint_bb3.identity().rotateZ(0);
+   		}
+
+      if (upsideDown == true){
+        look = false;
+        inLove = false;
+        root.translate(.2,0,0).rotateX(3);//.rotateZ(-Math.abs(Math.sin(CT.time)));
+        joint_bh.identity().rotateZ(-1 + -Math.abs( .5 * Math.sin(CT.time * 3)));
+        joint_bb.identity().translate(0,.5,0);
+        joint_bb2.identity().rotateZ(Math.abs(.5 * Math.sin(CT.time * 3)));
+        joint_bb3.identity().rotateZ(Math.abs(.8 * Math.sin(CT.time * 3)));
+        joint_bb4.identity().rotateZ(Math.abs(.8 * Math.sin(CT.time * 3)));
+
+        joint_bf.identity().rotateZ(.2 * Math.sin((CT.time)* 10));
+        joint_bf2.identity().rotateZ(.2 * Math.cos((CT.time)* 10));
+  
+        joint_bf_2.identity().rotateZ(.2 * Math.cos((CT.time) * 10));
+        joint_bf_22.identity().rotateZ(.2 * Math.sin((CT.time) * 10));
+
+        joint_bt.identity().rotateZ(Math.abs(Math.sin(CT.time * 3)));
+      }
+
+      if (inLove == true){
+        look = false;
+        upsideDown = false;
+        root.translate(0,.2,0).rotateX(.5 * Math.sin((CT.time) * 2));
+        joint_bh.identity().rotateX(.3 * Math.sin((CT.time) * 5));
+        joint_bb.identity().rotateX(0).translate(0,-.3,0);
+        joint_bb2.identity().translate(0,.1,0).rotateX(.5 * Math.sin((CT.time) * 2));
+        joint_bb3.identity().translate(0,.1,0);
+        joint_bb4.identity().translate(0,.1,0);
+        joint_bt.identity().rotateZ(.5 * Math.sin((CT.time)* 5)).rotateX(.5 * Math.sin(CT.time));
+
+        joint_bf.identity().translate(1,.6,.5);
+        joint_bf2.identity().translate(1,.6,-.2);
+
+        joint_bf_2.identity().translate(0,.1,-.2).rotateZ(.2 * Math.sin((CT.time - 5) * 4));
+        joint_bf_22.identity().translate(0,.1,.2).rotateZ(.2 * Math.cos((CT.time - 5) * 4));
+
+        body.setColor([ 3 * Math.abs(Math.sin(CT.time)),1, Math.max(.3, Math.abs(Math.sin(CT.time)))]);
+      }
+
+      if (sad == true){
+        look = false;
+        upsideDown = false;
+        inLove = false;
+
+        joint_bh.identity().translate(.5,-.8,0).rotateZ(-0.2 * Math.sin(CT.time));
+        joint_bb.identity().translate(.1 * Math.sin(CT.time * .5),0,0);
+        joint_bb2.identity().translate(.1 * Math.sin(CT.time * .5),0,0);
+        joint_bb3.identity().translate(.2 * Math.sin(CT.time * .5),0,0);
+        joint_bb4.identity().translate(.2 * Math.sin(CT.time * .2),0,0);
+        joint_bt.identity().rotateZ(.5 * -Math.sin(CT.time * .3));
+
+        joint_bf.identity().rotateZ(.2 * Math.sin(CT.time - 5));
+        joint_bf2.identity().rotateZ(.2 * Math.sin(CT.time - 5));
+        joint_bf_2.identity().rotateZ(.2 * Math.sin(CT.time - 5));
+        joint_bf_22.identity().rotateZ(.2 * Math.sin(CT.time - 5));
+
+
+        //joint_bb.identity().
+      }
+
+      function reset(){
+        joint_bh.identity().translate(.2 * Math.sin(CT.time * 5),0,0);//.rotateY(-.05).rotateZ(Math.sin(CT.time)*.5);
+      
+        joint_bb.identity().translate(.1 * Math.sin(CT.time * 5),0,0);
+        joint_bb2.identity().translate(.2 * Math.sin(CT.time * 5),-.1 * Math.cos(CT.time * 5),0);
+        joint_bb3.identity().translate(.2 * Math.sin(CT.time * 5),0,0);
+        joint_bb4.identity().translate(.2 * Math.sin(CT.time * 5),0,0);
+        
+        joint_bf.identity().rotateZ(.2 * Math.sin((CT.time + 2)* 5));
+        joint_bf2.identity().rotateZ(.2 * Math.sin((CT.time + 2)* 5));
+
+        joint_bf_2.identity().rotateZ(.2 * Math.sin((CT.time - 5) * 5));
+        joint_bf_22.identity().rotateZ(.2 * Math.sin((CT.time - 5) * 5));
+
+        body.setColor([0,1.6,0]);
+      }
+
+			root.draw();
+      setTimeout(update, 1000 / 60);
+   })();
+
+ </script>
